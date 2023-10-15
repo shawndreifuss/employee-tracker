@@ -21,10 +21,10 @@ VALUES
   ('CEO', 400000, 5);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES
+VALUES 
+('Shawn ', 'Dreifuss', 9, 1),
   ('Taylor', 'Gardner', 1, 1),
-  ('Virginia', 'Woolf', 2, 2),
+  ('Larissa', 'Labs', 2, 5),
   ('Unica', 'Zurn', 3, 1),
   ('Octavia', 'Butler', 4, 3),
-  ('Shawn ', 'Dreifuss', 9, 5),
-  ('Jordan', 'Chillinsky', 8, 5);
+ ('Jordan', 'Chillinsky', 8, 1);

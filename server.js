@@ -121,4 +121,80 @@ function viewAllEmployees() {
  });
 };
 
+//function to add employees
+function addEmployee() {
+  inquirer.prompt([
+      {
+          name: "first_name",
+          type: "input",
+          message: "Please enter the first name of the employee you want to add."
+      },
+      {
+          name: "last_name",
+          type: "input",
+          message: "Please enter the last name of the employee you want to add."
+      },
+      {
+          name: "role_id",
+          type: "number",
+          message: "Please enter the role id associated with the employee you want to add, Enter ONLY numbers."
+      },
+      {
+          name: "manager_id",
+          type: "number",
+          message: "Please enter the manager's id associated with the employee you want to add, Enter ONLY numbers."
+      }
+  ])
+  .then(function(response) {
+    db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [response.first_name, response.last_name, response.role_id, response.manager_id], function (err, data) {
+      if (err) throw err;
+      console.log('The new employee entered has been added successfully!');
+
+      db.query(`SELECT * FROM employee`, (err, result) => {
+          if (err) {
+              res.status(500).json({ error: err.message })
+              startUp();
+          }
+          console.table(result);
+          startUp();
+      });
+  })
+});
+};
+
+ //function to add role 
+ function addRole() {
+  inquirer.prompt([
+      {
+          name: "title",
+          type: "input",
+          message: "Please enter the title of role you want to add to the database."
+      },
+      {
+          name: "salary",
+          type: "input",
+          message: "Please enter the salary associated with the role you want to add to the database. (no dots, space or commas)"
+      },
+      {
+          name: "department_id",
+          type: "number",
+          message: "Please enter the department's id associated with the role you want to add to the database."
+      }
+    ]).then(function (response) {
+      db.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [response.title, response.salary, response.department_id], function (err, data) {
+          if (err) throw err;
+          console.log('The new role entered has been added successfully to the database.');
+
+          db.query(`SELECT * FROM role`, (err, result) => {
+              if (err) {
+                  res.status(500).json({ error: err.message })
+                  startUp();
+              }
+              console.table(result);
+              startUp();
+          });
+      })
+});
+};
+
 startUp()
