@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const express = require('express')
-
+const Table = require('console.table')
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -69,5 +69,22 @@ const db = mysql.createConnection(
         }
     })
  };
+
+//function to view all departments
+function viewAllDepartments() {
+  const sql = `SELECT * FROM department`;
+  db.query(sql, (err, result) => {
+      if (err) {
+          res.status(500).json({ error: err.message })
+          return;
+      }
+      console.table(result);
+      startUp();
+  });
+};
+
+
+
+
 
 startUp()
