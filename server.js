@@ -86,7 +86,7 @@ function viewAllDepartments() {
 
 //function to view all roles
 function viewAllRoles() {
-  const sql = `SELECT role.title AS Job_Title, role.salary, department.name AS Department
+  const sql = `SELECT role_id, role.title AS Job_Title, role.salary, department.name AS Department
   FROM role 
   JOIN department ON role.department_id = department.id;`; 
  db.query(sql, (err, result) => {
@@ -99,6 +99,26 @@ function viewAllRoles() {
  });
 };
 
-
+//function view all employees 
+function viewAllEmployees() {
+  const sql = ` SELECT employee.id, CONCAT (employee.first_name, ' ', employee.last_name) employee_name,
+  role.title AS Title,
+  department.name AS Department,
+  role.salary AS Salary,
+  CONCAT (manager.first_name, ' ', manager.last_name) Manager_name
+  FROM employee
+                 LEFT JOIN role ON employee.role_id = role.id
+                 LEFT JOIN department ON role.department_id = department.id
+                 LEFT JOIN employee AS manager ON employee.manager_id = manager.id
+                 ORDER By employee.id;`
+ db.query(sql, (err, result) => {
+  if (err) {
+    res.status(500).json({ error: err.message})
+    return;
+  }
+  console.table(result);
+  startUp()
+ });
+};
 
 startUp()
