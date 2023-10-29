@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const express = require('express')
-const Table = require('console.table')
+const Table = require('console.table');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -29,7 +29,7 @@ const db = mysql.createConnection(
             type: 'list',
             name: 'menu',
             message: 'What would you like to do?',
-            choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role', 'Update An Employee Manager', 'Delete Department', 'Delete Role', 'Delete Employee'], 
+            choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role', ], 
 
     }).then( answer => {
         switch (answer.menu) {
@@ -54,18 +54,7 @@ const db = mysql.createConnection(
             case 'Update An Employee Role':
                 updateEmployeeRole();
                 break;
-            case 'Update An Employee Manager':
-                updateEmployeeManager();
-                break;
-            case 'Delete Department':
-                deleteDepartment();
-                break;
-            case 'Delete Role':
-                deleteRole();
-                break;
-            case 'Delete Employee':
-                deleteEmployee();
-                break;
+               
         }
     })
  };
@@ -86,9 +75,7 @@ function viewAllDepartments() {
 
 //function to view all roles
 function viewAllRoles() {
-  const sql = `SELECT role_id, role.title AS Job_Title, role.salary, department.name AS Department
-  FROM role 
-  JOIN department ON role.department_id = department.id;`; 
+  const sql = `SELECT role.id, role.title AS Job_Title, role.salary, department.name AS Department FROM role JOIN department ON role.department_id = department.id;`; 
  db.query(sql, (err, result) => {
   if (err) {
     res.status(500).json({ error: err.message})
@@ -206,18 +193,15 @@ function addDepartment() {
       }
   ]).then((answer) => {
 
-  const sql = `INSERT INTO department (name)
+  const sql = `INSERT INTO department(name)
               VALUES (?)`;
-  const params = [answer.name];
+  const params = [answer.department];
   db.query(sql, params, (err, result) => {
   if (err) throw err;
   console.log('The new department entered has been added successfully!');
 
       db.query(`SELECT * FROM department`, (err, result) => {
-          if (err) {
-              res.status(500).json({ error: err.message })
-              return;
-          }
+          
           console.table(result);
           startUp();
       });
@@ -278,5 +262,7 @@ const updateEmployeeRole = () => {
       });
   });
 };
+
+
 
 startUp()
